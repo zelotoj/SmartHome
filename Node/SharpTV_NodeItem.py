@@ -28,7 +28,9 @@ class SharpTV_NodeItem(NodeItem.NodeItem):
             self.items.append(node_power_off)
 
     def power_on(self):
-        self.__sharp_tv.set_power(ZL.ZLSharpTV.POWER_VALUE.POWER_ON)
+        if self.port_test():
+            self.__sharp_tv.set_power(ZL.ZLSharpTV.POWER_VALUE.POWER_ON)
 
     def power_off(self):
-        self.__sharp_tv.set_power(ZL.ZLSharpTV.POWER_VALUE.POWER_OFF)
+        if self.port_test():
+            self.__sharp_tv.set_power(ZL.ZLSharpTV.POWER_VALUE.POWER_OFF)

@@ -23,11 +23,24 @@ class NodeItem(object):
         self.__init = init
         self.__func = func
 
+    def ping(self):
+        result = False
+        if self.ip:
+            result = ZL.ZLNetworkTools.ZLNetworkTools.ping(self.ip)
+        return result
+
+    def port_test(self):
+        result = False
+        if self.ip and self.port:
+            result = ZL.ZLNetworkTools.ZLNetworkTools.port_test(self.ip, self.port, self.is_tcp)
+        return result
+
     def node_init(self):
         if self.ip:
             if self.port:
-                self.enable = ZL.ZLNetworkTools.ZLNetworkTools.port_connect(self.ip, self.port, self.is_tcp)
-            self.enable = ZL.ZLNetworkTools.ZLNetworkTools.ping(self.ip)
+                self.enable = self.port_test()
+            else:
+                self.enable = self.ping()
         else:
             self.enable = True
         if self.__init:

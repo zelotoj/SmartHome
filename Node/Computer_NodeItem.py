@@ -21,10 +21,19 @@ class Computer_NodeItem(NodeItem.NodeItem):
             node_wakeup = NodeItem.NodeItem('Wake up', func=self.wakeup)
             node_wakeup.enable = not self.enable
             self.items.append(node_wakeup)
+            node_power_off = NodeItem.NodeItem('Power off', func=self.power_off)
+            node_power_off.enable = self.enable
+            self.items.append(node_power_off)
 
     def node_run(self):
         super(Computer_NodeItem, self).node_run()
 
     def wakeup(self):
-        if self.mac:
-            wol.send_magic_packet(mac.upper())
+        if self.mac and not self.ping():
+            mac = str(self.mac.upper()).replace(':','-')
+            print 'wakeup: %s' % mac
+            wol.send_magic_packet(mac)
+
+    def power_off(self):
+        if self.ip and self.port and self.ping():
+            ZL.ZLNetworkTools.ZLNetworkTools.ssh(self.ip, cmd='poweroff')
